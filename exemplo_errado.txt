@@ -1,0 +1,9 @@
+clas Main {          
+    public static void main(String[] args) {
+        int x;
+        x = 10$;     
+        if (x < 20) {
+            x == 30;  
+        }
+    }
+}
