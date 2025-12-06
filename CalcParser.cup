@@ -1,0 +1,79 @@
+/* Parser da Calculadora - Gramática Sintática */
+package calc;
+
+import java_cup.runtime.*;
+
+parser code {:
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Erro de sintaxe");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {
+                m.append(" na linha " + s.left);
+                if (s.right >= 0)
+                    m.append(", coluna " + s.right);
+            }
+        }
+        m.append(" : " + message);
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+
+/* Terminais */
+terminal PLUS, MINUS, TIMES, DIV, DIV_INT, POW;
+terminal LPAREN, RPAREN;
+terminal UMINUS;
+terminal Integer INT;
+terminal Double FLOAT;
+
+/* Não-terminais */
+non terminal Double expr_list, expr;
+
+/* Precedência (menor para maior) */
+precedence left PLUS, MINUS;
+precedence left TIMES, DIV, DIV_INT;
+precedence right POW;
+precedence left UMINUS;
+
+/* Gramática */
+start with expr_list;
+
+expr_list ::= expr_list expr:e
+              {: System.out.println("Resultado: " + e); :}
+            | expr:e
+              {: System.out.println("Resultado: " + e); :}
+            ;
+
+expr ::= expr:e1 PLUS expr:e2
+         {: RESULT = e1 + e2; 
+            System.out.println("  " + e1 + " + " + e2 + " = " + RESULT); :}
+       | expr:e1 MINUS expr:e2
+         {: RESULT = e1 - e2;
+            System.out.println("  " + e1 + " - " + e2 + " = " + RESULT); :}
+       | expr:e1 TIMES expr:e2
+         {: RESULT = e1 * e2;
+            System.out.println("  " + e1 + " * " + e2 + " = " + RESULT); :}
+       | expr:e1 DIV expr:e2
+         {: RESULT = e1 / e2;
+            System.out.println("  " + e1 + " / " + e2 + " = " + RESULT); :}
+       | expr:e1 DIV_INT expr:e2
+         {: RESULT = (double)(e1.intValue() / e2.intValue());
+            System.out.println("  " + e1.intValue() + " // " + e2.intValue() + " = " + RESULT.intValue()); :}
+       | expr:e1 POW expr:e2
+         {: RESULT = Math.pow(e1, e2);
+            System.out.println("  " + e1 + " ** " + e2 + " = " + RESULT); :}
+       | MINUS expr:e
+         {: RESULT = -e; :}
+         %prec UMINUS
+       | LPAREN expr:e RPAREN
+         {: RESULT = e; :}
+       | INT:n
+         {: RESULT = n.doubleValue(); :}
+       | FLOAT:n
+         {: RESULT = n; :}
+       ;

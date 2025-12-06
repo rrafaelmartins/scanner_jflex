@@ -41,52 +41,53 @@ IntegerLiteral = [0-9]+
 "/*"([^*]|\*+[^*/])*\*+"/"   { /* ignorar */ }
 
 /* Palavras reservadas da linguagem */
-"class"                { return symbol(sym.CLASS); }
-"public"               { return symbol(sym.PUBLIC); }
-"static"               { return symbol(sym.STATIC); }
-"void"                 { return symbol(sym.VOID); }
-"main"                 { return symbol(sym.MAIN); }
-"String"               { return symbol(sym.STRING); }
-"extends"              { return symbol(sym.EXTENDS); }
-"return"               { return symbol(sym.RETURN); }
-"int"                  { return symbol(sym.INT); }
-"boolean"              { return symbol(sym.BOOLEAN); }
-"if"                   { return symbol(sym.IF); }
-"else"                 { return symbol(sym.ELSE); }
-"while"                { return symbol(sym.WHILE); }
-"true"                 { return symbol(sym.TRUE); }
-"false"                { return symbol(sym.FALSE); }
-"this"                 { return symbol(sym.THIS); }
-"new"                  { return symbol(sym.NEW); }
-"length"               { return symbol(sym.LENGTH); }
-"System.out.println"   { return symbol(sym.PRINTLN); }
+"class"                { return symbol(Sym.CLASS); }
+"public"               { return symbol(Sym.PUBLIC); }
+"static"               { return symbol(Sym.STATIC); }
+"void"                 { return symbol(Sym.VOID); }
+"main"                 { return symbol(Sym.MAIN); }
+"String"               { return symbol(Sym.STRING); }
+"extends"              { return symbol(Sym.EXTENDS); }
+"return"               { return symbol(Sym.RETURN); }
+"int"                  { return symbol(Sym.INT); }
+"boolean"              { return symbol(Sym.BOOLEAN); }
+"if"                   { return symbol(Sym.IF); }
+"else"                 { return symbol(Sym.ELSE); }
+"while"                { return symbol(Sym.WHILE); }
+"true"                 { return symbol(Sym.TRUE); }
+"false"                { return symbol(Sym.FALSE); }
+"this"                 { return symbol(Sym.THIS); }
+"new"                  { return symbol(Sym.NEW); }
+"length"               { return symbol(Sym.LENGTH); }
+"System.out.println"   { return symbol(Sym.PRINTLN); }
 
 /* Delimitadores */
-"{"                    { return symbol(sym.LBRACE); }
-"}"                    { return symbol(sym.RBRACE); }
-"("                    { return symbol(sym.LPAREN); }
-")"                    { return symbol(sym.RPAREN); }
-"["                    { return symbol(sym.LBRACKET); }
-"]"                    { return symbol(sym.RBRACKET); }
-";"                    { return symbol(sym.SEMI); }
-","                    { return symbol(sym.COMMA); }
-"."                    { return symbol(sym.DOT); }
-"="                    { return symbol(sym.ASSIGN); }
+"{"                    { return symbol(Sym.LBRACE); }
+"}"                    { return symbol(Sym.RBRACE); }
+"("                    { return symbol(Sym.LPAREN); }
+")"                    { return symbol(Sym.RPAREN); }
+"["                    { return symbol(Sym.LBRACKET); }
+"]"                    { return symbol(Sym.RBRACKET); }
+";"                    { return symbol(Sym.SEMI); }
+","                    { return symbol(Sym.COMMA); }
+"."                    { return symbol(Sym.DOT); }
+"="                    { return symbol(Sym.ASSIGN); }
 
 /* Operadores */
-"&&"                   { return symbol(sym.AND); }
-"<"                    { return symbol(sym.LESS); }
-"+"                    { return symbol(sym.PLUS); }
-"-"                    { return symbol(sym.MINUS); }
-"*"                    { return symbol(sym.TIMES); }
-"!"                    { return symbol(sym.NOT); }
+"&&"                   { return symbol(Sym.AND); }
+"<"                    { return symbol(Sym.LESS); }
+"+"                    { return symbol(Sym.PLUS); }
+"-"                    { return symbol(Sym.MINUS); }
+"*"                    { return symbol(Sym.TIMES); }
+"!"                    { return symbol(Sym.NOT); }
 
 /* Literais inteiros */
-{IntegerLiteral}       { return symbol(sym.INTEGER_LITERAL, Integer.valueOf(yytext())); }
+{IntegerLiteral}       { return symbol(Sym.INTEGER_LITERAL, Integer.valueOf(yytext())); }
 
 /* Identificadores */
-{Identifier}           { return symbol(sym.IDENTIFIER, yytext()); }
-
+{Identifier}           { return symbol(Sym.IDENTIFIER, yytext()); }
+/* EOF */
+<<EOF>>                { return symbol(Sym.EOF); }
 /* Tratamento de erros */
 .                      { 
                          System.err.println(

@@ -1,0 +1,203 @@
+PS C:\Users\User\Desktop\scanner_jflex>
+                                        javac -cp ".\java-cup-11b-runtime.jar;." -d build minijava\Main.java minijava\Parser.java minijava\Sym.java minijava\MiniJavaLexer.java
+minijava\Main.java:33: error: cannot find symbol
+            parser p = new parser(lexer);
+            ^
+  symbol:   class parser
+  location: class Main
+minijava\Main.java:33: error: cannot find symbol
+            parser p = new parser(lexer);
+                           ^
+  symbol:   class parser
+  location: class Main
+minijava\MiniJavaLexer.java:818: error: cannot find symbol
+          { return new java_cup.runtime.Symbol(sym.EOF); }
+                                               ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:835: error: cannot find symbol
+            { return symbol(sym.NOT);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:840: error: cannot find symbol
+            { return symbol(sym.LPAREN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:845: error: cannot find symbol
+            { return symbol(sym.RPAREN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:850: error: cannot find symbol
+            { return symbol(sym.TIMES);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:855: error: cannot find symbol
+            { return symbol(sym.PLUS);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:860: error: cannot find symbol
+            { return symbol(sym.COMMA);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:865: error: cannot find symbol
+            { return symbol(sym.MINUS);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:870: error: cannot find symbol
+            { return symbol(sym.DOT);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:875: error: cannot find symbol
+            { return symbol(sym.INTEGER_LITERAL, Integer.valueOf(yytext()));
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:880: error: cannot find symbol
+            { return symbol(sym.SEMI);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:885: error: cannot find symbol
+            { return symbol(sym.LESS);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:890: error: cannot find symbol
+            { return symbol(sym.ASSIGN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:895: error: cannot find symbol
+            { return symbol(sym.IDENTIFIER, yytext());
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:900: error: cannot find symbol
+            { return symbol(sym.LBRACKET);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:905: error: cannot find symbol
+            { return symbol(sym.RBRACKET);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:910: error: cannot find symbol
+            { return symbol(sym.LBRACE);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:915: error: cannot find symbol
+            { return symbol(sym.RBRACE);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:920: error: cannot find symbol
+            { return symbol(sym.AND);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:925: error: cannot find symbol
+            { return symbol(sym.IF);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:930: error: cannot find symbol
+            { return symbol(sym.INT);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:935: error: cannot find symbol
+            { return symbol(sym.NEW);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:940: error: cannot find symbol
+            { return symbol(sym.ELSE);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:945: error: cannot find symbol
+            { return symbol(sym.MAIN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:950: error: cannot find symbol
+            { return symbol(sym.THIS);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:955: error: cannot find symbol
+            { return symbol(sym.TRUE);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:960: error: cannot find symbol
+            { return symbol(sym.VOID);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:965: error: cannot find symbol
+            { return symbol(sym.CLASS);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:970: error: cannot find symbol
+            { return symbol(sym.FALSE);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:975: error: cannot find symbol
+            { return symbol(sym.WHILE);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:980: error: cannot find symbol
+            { return symbol(sym.STRING);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:985: error: cannot find symbol
+            { return symbol(sym.LENGTH);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:990: error: cannot find symbol
+            { return symbol(sym.PUBLIC);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:995: error: cannot find symbol
+            { return symbol(sym.RETURN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:1000: error: cannot find symbol
+            { return symbol(sym.STATIC);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:1005: error: cannot find symbol
+            { return symbol(sym.BOOLEAN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:1010: error: cannot find symbol
+            { return symbol(sym.EXTENDS);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+minijava\MiniJavaLexer.java:1015: error: cannot find symbol
+            { return symbol(sym.PRINTLN);
+                            ^
+  symbol:   variable sym
+  location: class MiniJavaLexer
+40 errors

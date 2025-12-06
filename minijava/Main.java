@@ -30,7 +30,7 @@ public class Main {
             MiniJavaLexer lexer = new MiniJavaLexer(reader);
             
             // Criar o parser (analisador sintático)
-            parser p = new parser(lexer);
+            Parser p = new Parser(lexer);
             
             // Executar a análise
             System.out.println("\nIniciando análise...\n");

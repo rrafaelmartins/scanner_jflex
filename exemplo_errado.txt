@@ -1,9 +1,19 @@
-clas Main {          
+// Exemplo CORRETO de MiniJava com classe auxiliar
+
+class Main {
     public static void main(String[] args) {
-        int x;
-        x = 10$;     
-        if (x < 20) {
-            x == 30;  
+        System.out.println(new Calc().compute(10));
+    }
+}
+
+class Calc {
+    public int compute(int n) {
+        int result;
+        if (n < 20) {
+            result = n + 1;
+        } else {
+            result = n - 1;
         }
+        return result;
     }
 }

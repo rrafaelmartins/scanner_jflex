@@ -1,15 +1,5 @@
 class Main {
     public static void main(String[] args) {
-        int x;
-        x = 10;
-        if (x < 20) {
-            x = x + 1;
-        } else {
-            x = x - 1;
-        }
-        while (x < 25) {
-            x = x + 1;
-        }
-        System.out.println(x);
+        System.out.println(42);
     }
 }
