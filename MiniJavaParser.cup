@@ -1,0 +1,173 @@
+/* Parser de MiniJava - Gramática Sintática */
+package minijava;
+
+import java_cup.runtime.*;
+
+/* Código do parser */
+parser code {:
+    /* Método para reportar erros de sintaxe */
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Erro de sintaxe");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {
+                m.append(" na linha " + s.left);
+                if (s.right >= 0)
+                    m.append(", coluna " + s.right);
+            }
+        }
+        m.append(" : " + message);
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+
+/* Definição dos terminais (tokens do scanner) */
+terminal CLASS, PUBLIC, STATIC, VOID, MAIN, STRING, EXTENDS, RETURN;
+terminal INT, BOOLEAN, IF, ELSE, WHILE;
+terminal TRUE, FALSE, THIS, NEW, LENGTH;
+terminal PRINTLN;
+terminal LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET;
+terminal SEMI, COMMA, DOT, ASSIGN;
+terminal AND, LESS, PLUS, MINUS, TIMES, NOT;
+terminal Integer INTEGER_LITERAL;
+terminal String IDENTIFIER;
+
+/* Definição dos não-terminais */
+non terminal Program;
+non terminal MainClass;
+non terminal ClassDeclList, ClassDecl;
+non terminal VarDeclList, VarDecl;
+non terminal MethodDeclList, MethodDecl;
+non terminal FormalList, FormalRest;
+non terminal Type;
+non terminal StatementList, Statement;
+non terminal Exp, ExpList, ExpRest;
+
+/* Precedência dos operadores (menor para maior) */
+precedence left AND;
+precedence left LESS;
+precedence left PLUS, MINUS;
+precedence left TIMES;
+precedence right NOT;
+precedence left DOT;
+precedence left LBRACKET;
+
+/* Gramática */
+start with Program;
+
+/* Program -> MainClass ClassDeclList */
+Program ::= MainClass:m ClassDeclList:c
+            {: System.out.println("Programa MiniJava reconhecido com sucesso!"); :}
+          ;
+
+/* MainClass -> class id { public static void main ( String [ ] id ) { Statement } } */
+MainClass ::= CLASS IDENTIFIER:name LBRACE 
+              PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER:args RPAREN 
+              LBRACE Statement:s RBRACE 
+              RBRACE
+              {: System.out.println("Classe principal '" + name + "' reconhecida"); :}
+            ;
+
+/* ClassDeclList -> ClassDecl* */
+ClassDeclList ::= ClassDeclList ClassDecl
+                | /* vazio */
+                ;
+
+/* ClassDecl -> class id { VarDeclList MethodDeclList }
+             | class id extends id { VarDeclList MethodDeclList } */
+ClassDecl ::= CLASS IDENTIFIER:name LBRACE VarDeclList MethodDeclList RBRACE
+              {: System.out.println("Classe '" + name + "' reconhecida"); :}
+            | CLASS IDENTIFIER:name EXTENDS IDENTIFIER:parent LBRACE VarDeclList MethodDeclList RBRACE
+              {: System.out.println("Classe '" + name + "' (extends " + parent + ") reconhecida"); :}
+            ;
+
+/* VarDeclList -> VarDecl* */
+VarDeclList ::= VarDeclList VarDecl
+              | /* vazio */
+              ;
+
+/* VarDecl -> Type id ; */
+VarDecl ::= Type IDENTIFIER:name SEMI
+            {: System.out.println("  Variável '" + name + "' declarada"); :}
+          ;
+
+/* MethodDeclList -> MethodDecl* */
+MethodDeclList ::= MethodDeclList MethodDecl
+                 | /* vazio */
+                 ;
+
+/* MethodDecl -> public Type id ( FormalList ) { VarDeclList StatementList return Exp ; } */
+MethodDecl ::= PUBLIC Type IDENTIFIER:name LPAREN FormalList RPAREN 
+               LBRACE VarDeclList StatementList RETURN Exp SEMI RBRACE
+               {: System.out.println("  Método '" + name + "' reconhecido"); :}
+             ;
+
+/* FormalList -> Type id FormalRest* | vazio */
+FormalList ::= Type IDENTIFIER FormalRest
+             | /* vazio */
+             ;
+
+/* FormalRest -> , Type id */
+FormalRest ::= FormalRest COMMA Type IDENTIFIER
+             | /* vazio */
+             ;
+
+/* Type -> int[] | boolean | int | id */
+Type ::= INT LBRACKET RBRACKET
+       | BOOLEAN
+       | INT
+       | IDENTIFIER
+       ;
+
+/* StatementList -> Statement* */
+StatementList ::= StatementList Statement
+                | /* vazio */
+                ;
+
+/* Statement */
+Statement ::= LBRACE StatementList RBRACE
+            | IF LPAREN Exp RPAREN Statement ELSE Statement
+            | WHILE LPAREN Exp RPAREN Statement
+            | PRINTLN LPAREN Exp RPAREN SEMI
+            | IDENTIFIER:name ASSIGN Exp SEMI
+              {: System.out.println("    Atribuição para '" + name + "'"); :}
+            | IDENTIFIER:name LBRACKET Exp RBRACKET ASSIGN Exp SEMI
+              {: System.out.println("    Atribuição para array '" + name + "'"); :}
+            ;
+
+/* Exp - Expressões */
+Exp ::= Exp AND Exp
+      | Exp LESS Exp
+      | Exp PLUS Exp
+      | Exp MINUS Exp
+      | Exp TIMES Exp
+      | Exp LBRACKET Exp RBRACKET
+      | Exp DOT LENGTH
+      | Exp DOT IDENTIFIER:method LPAREN ExpList RPAREN
+        {: System.out.println("    Chamada de método '" + method + "'"); :}
+      | INTEGER_LITERAL:value
+      | TRUE
+      | FALSE
+      | IDENTIFIER:name
+      | THIS
+      | NEW INT LBRACKET Exp RBRACKET
+      | NEW IDENTIFIER:name LPAREN RPAREN
+        {: System.out.println("    Criação de objeto '" + name + "'"); :}
+      | NOT Exp
+      | LPAREN Exp RPAREN
+      ;
+
+/* ExpList -> Exp ExpRest* | vazio */
+ExpList ::= Exp ExpRest
+          | /* vazio */
+          ;
+
+/* ExpRest -> , Exp */
+ExpRest ::= ExpRest COMMA Exp
+          | /* vazio */
+          ;
