@@ -277,11 +277,13 @@ public class CalcLexer implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
-    private Symbol symbol(int type) {
+    private Symbol symbol(int type, String name) {
+        System.out.println("TOKEN: " + name + " (linha " + (yyline + 1) + ", coluna " + (yycolumn + 1) + ")");
         return new Symbol(type, yyline + 1, yycolumn + 1);
     }
 
-    private Symbol symbol(int type, Object value) {
+    private Symbol symbol(int type, String name, Object value) {
+        System.out.println("TOKEN: " + name + "(" + value + ") (linha " + (yyline + 1) + ", coluna " + (yycolumn + 1) + ")");
         return new Symbol(type, yyline + 1, yycolumn + 1, value);
     }
 
@@ -706,68 +708,68 @@ public class CalcLexer implements java_cup.runtime.Scanner {
         zzAtEOF = true;
             zzDoEOF();
               {
-                return symbol(Sym.EOF);
+                System.out.println("TOKEN: EOF"); return new Symbol(Sym.EOF);
               }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Erro lexico: simbolo invalido '" + yytext() + "' na linha " + (yyline + 1) + ", coluna " + (yycolumn + 1));
+            { System.err.println("ERRO LEXICO: simbolo invalido '" + yytext() + "' na linha " + (yyline + 1) + ", coluna " + (yycolumn + 1));
             }
           // fall through
           case 13: break;
           case 2:
-            { /* ignorar */
+            { 
             }
           // fall through
           case 14: break;
           case 3:
-            { return symbol(Sym.LPAREN);
+            { return symbol(Sym.LPAREN, "LPAREN");
             }
           // fall through
           case 15: break;
           case 4:
-            { return symbol(Sym.RPAREN);
+            { return symbol(Sym.RPAREN, "RPAREN");
             }
           // fall through
           case 16: break;
           case 5:
-            { return symbol(Sym.TIMES);
+            { return symbol(Sym.TIMES, "TIMES");
             }
           // fall through
           case 17: break;
           case 6:
-            { return symbol(Sym.PLUS);
+            { return symbol(Sym.PLUS, "PLUS");
             }
           // fall through
           case 18: break;
           case 7:
-            { return symbol(Sym.MINUS);
+            { return symbol(Sym.MINUS, "MINUS");
             }
           // fall through
           case 19: break;
           case 8:
-            { return symbol(Sym.DIV);
+            { return symbol(Sym.DIV, "DIV");
             }
           // fall through
           case 20: break;
           case 9:
-            { return symbol(Sym.INT, Integer.valueOf(yytext()));
+            { return symbol(Sym.INT, "INT", Integer.valueOf(yytext()));
             }
           // fall through
           case 21: break;
           case 10:
-            { return symbol(Sym.POW);
+            { return symbol(Sym.POW, "POW");
             }
           // fall through
           case 22: break;
           case 11:
-            { return symbol(Sym.DIV_INT);
+            { return symbol(Sym.DIV_INT, "DIV_INT");
             }
           // fall through
           case 23: break;
           case 12:
-            { return symbol(Sym.FLOAT, Double.valueOf(yytext()));
+            { return symbol(Sym.FLOAT, "FLOAT", Double.valueOf(yytext()));
             }
           // fall through
           case 24: break;
