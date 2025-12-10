@@ -59,6 +59,8 @@ java -jar jflex-full-1.9.1.jar -d calc CalcLexer.jflex
 REM 4. Corrigir o import no arquivo gerado (bug do JFlex)
 powershell -Command "(Get-Content calc\CalcLexer.java) -replace 'import java_cup.runtime\.;', 'import java_cup.runtime.*;' | Set-Content calc\CalcLexer.java"
 
+OBS: CASO ainda ocorra algum erro relacionado ao import java_cup.runtime, tente adicionar um asterisco no final: import java_cup.runtime.*
+
 REM 5. Criar pasta build (se não existir)
 mkdir build
 
