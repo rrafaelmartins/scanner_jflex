@@ -1,113 +1,222 @@
-# Compilador MiniJava
+# Compiladores - Analisador Léxico e Sintático
 
-Analisador Léxico e Sintático para a linguagem MiniJava utilizando **JFlex** e **CUP**.
+Este projeto implementa analisadores léxicos e sintáticos usando **JFlex** e **CUP** para duas linguagens:
+1. **MiniJava** - Subconjunto da linguagem Java
+2. **Calculadora** - Expressões aritméticas
+
+---
 
 ## 📁 Estrutura do Projeto
 
 ```
-scanner/
-├── lib/                          # Bibliotecas necessárias
-│   ├── jflex-full-1.9.1.jar     # JFlex (gerador de scanner)
-│   ├── java-cup-11b.jar         # CUP (gerador de parser)
-│   └── java-cup-11b-runtime.jar # Runtime do CUP
-├── minijava/                     # Código fonte gerado e manual
-│   └── Main.java                # Classe principal
-├── build/                        # Arquivos compilados
-├── MiniJavaLexer.jflex          # Especificação do Scanner (JFlex)
-├── MiniJavaParser.cup           # Especificação do Parser (CUP)
-├── build.sh                     # Script de build (Linux/Mac)
-├── build.bat                    # Script de build (Windows)
-├── run.sh                       # Script de execução (Linux/Mac)
-├── run.bat                      # Script de execução (Windows)
-├── exemplo_minijava.java        # Exemplo simples
-└── exemplo_complexo.java        # Exemplo com mais recursos
+scanner_jflex/
+├── java-cup-11b.jar              # CUP - Gerador de Parser
+├── java-cup-11b-runtime.jar      # Runtime do CUP
+├── jflex-full-1.9.1.jar          # JFlex - Gerador de Scanner
+│
+├── MiniJavaLexer.jflex           # Scanner do MiniJava
+├── MiniJavaParser.cup            # Parser do MiniJava
+├── minijava/
+│   └── Main.java                 # Classe principal MiniJava
+│
+├── CalcLexer.jflex               # Scanner da Calculadora
+├── CalcParser.cup                # Parser da Calculadora
+├── calc/
+│   └── Main.java                 # Classe principal Calculadora
+│
+├── build/                        # Arquivos compilados (.class)
+│
+├── exemplo_simples.txt           # Exemplo MiniJava simples
+├── exemplo_certo.txt             # Exemplo MiniJava completo
+├── exemplo_calc_ok.txt           # Exemplo Calculadora
+└── teste_calc.txt                # Teste Calculadora
 ```
+
+---
 
 ## 🔧 Pré-requisitos
 
-1. **Java JDK** (versão 8 ou superior)
-2. **JFlex** - Gerador de analisador léxico
-3. **CUP** - Gerador de analisador sintático
+- **Java JDK** (versão 8 ou superior)
+- **JFlex** (`jflex-full-1.9.1.jar`)
+- **CUP** (`java-cup-11b.jar` e `java-cup-11b-runtime.jar`)
 
-### Baixando as Bibliotecas
+---
 
-Se a pasta `lib/` estiver vazia, baixe os arquivos:
+## 🧮 CALCULADORA
 
-1. **JFlex**: https://jflex.de/download.html
-   - Baixe `jflex-full-1.9.1.jar`
-
-2. **CUP**: http://www2.cs.tum.edu/projects/cup/
-   - Baixe `java-cup-11b.jar` e `java-cup-11b-runtime.jar`
-
-Coloque os 3 arquivos JAR na pasta `lib/`.
-
-## 🚀 Compilação e Execução
-
-### Linux/Mac
-
-```bash
-# 1. Dar permissão de execução aos scripts
-chmod +x build.sh run.sh
-
-# 2. Compilar o projeto
-./build.sh
-
-# 3. Executar com um arquivo de teste
-./run.sh exemplo_minijava.java
-./run.sh exemplo_complexo.java
-```
-
-### Windows
+### Comandos para Compilar
 
 ```batch
-# 1. Compilar o projeto
-build.bat
+REM 1. Criar pasta calc (se não existir)
+mkdir calc
 
-# 2. Executar com um arquivo de teste
-run.bat exemplo_minijava.java
-run.bat exemplo_complexo.java
+REM 2. Gerar o Parser com CUP
+java -jar java-cup-11b.jar -destdir calc -parser Parser -symbols Sym CalcParser.cup
+
+REM 3. Gerar o Scanner com JFlex
+java -jar jflex-full-1.9.1.jar -d calc CalcLexer.jflex
+
+REM 4. Corrigir o import no arquivo gerado (bug do JFlex)
+powershell -Command "(Get-Content calc\CalcLexer.java) -replace 'import java_cup.runtime\.;', 'import java_cup.runtime.*;' | Set-Content calc\CalcLexer.java"
+
+REM 5. Criar pasta build (se não existir)
+mkdir build
+
+REM 6. Compilar todos os arquivos Java
+javac -cp ".\java-cup-11b-runtime.jar;." -d build calc\Main.java calc\Parser.java calc\Sym.java calc\CalcLexer.java
 ```
 
-## 📝 Comandos Manuais (Passo a Passo)
+### Comando para Executar
 
-Se preferir executar manualmente:
-
-### 1. Gerar o Parser (CUP)
-```bash
-java -jar lib/java-cup-11b.jar -destdir minijava -parser parser -symbols sym MiniJavaParser.cup
-```
-Isso gera:
-- `minijava/parser.java` - O analisador sintático
-- `minijava/sym.java` - Símbolos/tokens
-
-### 2. Gerar o Scanner (JFlex)
-```bash
-java -jar lib/jflex-full-1.9.1.jar -d minijava MiniJavaLexer.jflex
-```
-Isso gera:
-- `minijava/MiniJavaLexer.java` - O analisador léxico
-
-### 3. Compilar tudo
-```bash
-# Linux/Mac
-javac -cp "lib/java-cup-11b-runtime.jar:." -d build minijava/*.java
-
-# Windows
-javac -cp "lib/java-cup-11b-runtime.jar;." -d build minijava/*.java
+```batch
+java -cp "build;java-cup-11b-runtime.jar" calc.Main exemplo_calc_ok.txt
 ```
 
-### 4. Executar
-```bash
-# Linux/Mac
-java -cp "build:lib/java-cup-11b-runtime.jar" minijava.Main exemplo_minijava.java
+### Exemplo de Entrada (`exemplo_calc_ok.txt`)
 
-# Windows
-java -cp "build;lib/java-cup-11b-runtime.jar" minijava.Main exemplo_minijava.java
+```
+(3 + 4) * 2
+10 / 2
+5 // 2
+2 ** 3
+3.14 * 2
 ```
 
-## 📖 Gramática MiniJava
+### Exemplo de Saída
 
-A gramática implementada segue a especificação MiniJava:
+```
+==================================================
+Calculadora - Analisador Lexico e Sintatico
+==================================================
+Analisando arquivo: exemplo_calc_ok.txt
+--------------------------------------------------
+
+Calculando...
+
+TOKEN: LPAREN (linha 1, coluna 1)
+TOKEN: INT(3) (linha 1, coluna 2)
+TOKEN: PLUS (linha 1, coluna 4)
+TOKEN: INT(4) (linha 1, coluna 6)
+TOKEN: RPAREN (linha 1, coluna 7)
+TOKEN: TIMES (linha 1, coluna 9)
+TOKEN: INT(2) (linha 1, coluna 11)
+  3.0 + 4.0 = 7.0
+  7.0 * 2.0 = 14.0
+Resultado: 14.0
+...
+```
+
+### Tokens Reconhecidos (Calculadora)
+
+| Token | Descrição | Exemplo |
+|-------|-----------|---------|
+| `INT` | Número inteiro | `42` |
+| `FLOAT` | Número decimal | `3.14` |
+| `PLUS` | Adição | `+` |
+| `MINUS` | Subtração | `-` |
+| `TIMES` | Multiplicação | `*` |
+| `DIV` | Divisão | `/` |
+| `DIV_INT` | Divisão inteira | `//` |
+| `POW` | Potência | `**` |
+| `LPAREN` | Parêntese esquerdo | `(` |
+| `RPAREN` | Parêntese direito | `)` |
+
+---
+
+## ☕ MINIJAVA
+
+### Comandos para Compilar
+
+```batch
+REM 1. Criar pasta minijava (se não existir)
+mkdir minijava
+
+REM 2. Gerar o Parser com CUP
+java -jar java-cup-11b.jar -expect 1 -parser Parser -symbols Sym MiniJavaParser.cup
+
+REM 3. Mover arquivos gerados para pasta minijava
+move Parser.java minijava\
+move Sym.java minijava\
+
+REM 4. Gerar o Scanner com JFlex
+java -jar jflex-full-1.9.1.jar -d minijava MiniJavaLexer.jflex
+
+REM 5. Corrigir o import no arquivo gerado (bug do JFlex)
+powershell -Command "(Get-Content minijava\MiniJavaLexer.java) -replace 'import java_cup.runtime\.;', 'import java_cup.runtime.*;' | Set-Content minijava\MiniJavaLexer.java"
+
+REM 6. Criar pasta build (se não existir)
+mkdir build
+
+REM 7. Compilar todos os arquivos Java
+javac -cp ".\java-cup-11b-runtime.jar;." -d build minijava\Main.java minijava\Parser.java minijava\Sym.java minijava\MiniJavaLexer.java
+```
+
+### Comando para Executar
+
+```batch
+java -cp "build;java-cup-11b-runtime.jar" minijava.Main exemplo_certo.txt
+```
+
+### Exemplo de Entrada (`exemplo_certo.txt`)
+
+```java
+class Main {
+    public static void main(String[] args) {
+        System.out.println(new Calc().compute(10));
+    }
+}
+
+class Calc {
+    public int compute(int n) {
+        int result;
+        if (n < 20) {
+            result = n + 1;
+        } else {
+            result = n - 1;
+        }
+        return result;
+    }
+}
+```
+
+### Exemplo de Saída
+
+```
+==================================================
+Compilador MiniJava
+==================================================
+Analisando arquivo: exemplo_certo.txt
+--------------------------------------------------
+
+Iniciando análise...
+
+    Criação de objeto 'Calc'
+    Chamada de método 'compute'
+Classe principal 'Main' reconhecida
+  Variável 'result' declarada
+  Método 'compute' reconhecido
+Classe 'Calc' reconhecida
+Programa MiniJava reconhecido com sucesso!
+
+--------------------------------------------------
+Análise concluída com sucesso!
+==================================================
+```
+
+### Tokens Reconhecidos (MiniJava)
+
+| Categoria | Tokens |
+|-----------|--------|
+| Palavras Reservadas | `class`, `public`, `static`, `void`, `main`, `String`, `extends`, `return`, `int`, `boolean`, `if`, `else`, `while`, `true`, `false`, `this`, `new`, `length` |
+| Delimitadores | `{`, `}`, `(`, `)`, `[`, `]`, `;`, `,`, `.`, `=` |
+| Operadores | `&&`, `<`, `+`, `-`, `*`, `!` |
+| Literais | Inteiros (`[0-9]+`) |
+| Identificadores | `[A-Za-z][A-Za-z0-9_]*` |
+| Especial | `System.out.println` |
+
+---
+
+## 📜 Gramática MiniJava
 
 ```
 Program        → MainClass ClassDecl*
@@ -116,8 +225,6 @@ ClassDecl      → class id { VarDecl* MethodDecl* }
                | class id extends id { VarDecl* MethodDecl* }
 VarDecl        → Type id ;
 MethodDecl     → public Type id ( FormalList ) { VarDecl* Statement* return Exp ; }
-FormalList     → Type id FormalRest* | ε
-FormalRest     → , Type id
 Type           → int[] | boolean | int | id
 Statement      → { Statement* }
                | if ( Exp ) Statement else Statement
@@ -130,75 +237,57 @@ Exp            → Exp op Exp | Exp [ Exp ] | Exp . length
                | true | false | id | this
                | new int [ Exp ] | new id ( )
                | ! Exp | ( Exp )
-ExpList        → Exp ExpRest* | ε
-ExpRest        → , Exp
 ```
 
-### Tokens Reconhecidos
+---
 
-| Categoria | Tokens |
-|-----------|--------|
-| Palavras Reservadas | `class`, `public`, `static`, `void`, `main`, `String`, `extends`, `return`, `int`, `boolean`, `if`, `else`, `while`, `true`, `false`, `this`, `new`, `length` |
-| Delimitadores | `{`, `}`, `(`, `)`, `[`, `]`, `;`, `,`, `.`, `=` |
-| Operadores | `&&`, `<`, `+`, `-`, `*`, `!` |
-| Literais | Inteiros (`[0-9]+`) |
-| Identificadores | `[A-Za-z][A-Za-z0-9_]*` |
+## 📜 Gramática da Calculadora
 
-## 🧪 Exemplos de Saída
-
-### Programa válido
 ```
-==================================================
-Compilador MiniJava
-==================================================
-Analisando arquivo: exemplo_minijava.java
---------------------------------------------------
-
-Iniciando análise...
-
-Classe principal 'Factorial' reconhecida
-  Método 'ComputeFac' reconhecido
-Classe 'Fac' reconhecida
-Programa MiniJava reconhecido com sucesso!
-
---------------------------------------------------
-Análise concluída com sucesso!
-==================================================
+expr_list → expr_list expr | expr
+expr      → expr + expr
+          | expr - expr
+          | expr * expr
+          | expr / expr
+          | expr // expr    (divisão inteira)
+          | expr ** expr    (potência)
+          | - expr
+          | ( expr )
+          | INT
+          | FLOAT
 ```
 
-### Programa com erro
-```
-Erro de sintaxe na linha 5, coluna 10 : ...
-```
+### Precedência de Operadores (menor para maior)
 
-## 📚 Arquivos Importantes
+1. `+`, `-` (adição, subtração)
+2. `*`, `/`, `//` (multiplicação, divisão)
+3. `**` (potência - associativo à direita)
+4. `-` unário
 
-### MiniJavaLexer.jflex
-Especificação do analisador léxico. Define:
-- Expressões regulares para tokens
-- Ações para cada token reconhecido
-- Tratamento de erros léxicos
-
-### MiniJavaParser.cup
-Especificação do analisador sintático. Define:
-- Declaração de terminais e não-terminais
-- Precedência de operadores
-- Regras gramaticais
-- Ações semânticas
-
-### Main.java
-Classe principal que:
-- Lê o arquivo de entrada
-- Cria o scanner (lexer)
-- Cria o parser
-- Executa a análise
+---
 
 ## ❓ Problemas Comuns
 
-1. **"JFlex não encontrado"**: Verifique se o arquivo JAR está em `lib/`
-2. **"CUP não encontrado"**: Verifique se ambos os JARs do CUP estão em `lib/`
-3. **Erro de classpath**: No Windows use `;` e no Linux/Mac use `:` como separador
+### Erro: `import java_cup.runtime.;`
+O JFlex às vezes gera o import incorreto. Corrigir com:
+```batch
+powershell -Command "(Get-Content arquivo.java) -replace 'import java_cup.runtime\.;', 'import java_cup.runtime.*;' | Set-Content arquivo.java"
+```
 
-## 👥 Autores
+### Erro: `cannot find symbol: class Symbol`
+O classpath não está correto. Verificar se o JAR está no caminho:
+```batch
+javac -cp ".\java-cup-11b-runtime.jar;." ...
+```
 
-Desenvolvido para a disciplina de Compiladores.
+### Erro: `Shift/Reduce conflict`
+Usar a flag `-expect N` no CUP:
+```batch
+java -jar java-cup-11b.jar -expect 1 ...
+```
+
+---
+
+- **JFlex**: https://jflex.de/
+- **CUP**: http://www2.cs.tum.edu/projects/cup/
+- **MiniJava**: https://www.cambridge.org/resources/052182060X/
